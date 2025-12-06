@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router, Request,Response } from "express";
 import { OutOfStockProducts, topSoldProducts, totalAvailableProduct } from "../controller/products";
 import authMiddleware from "../middleware";
 
 
 const router = Router();
 
-router.get('/outofstock',authMiddleware, async (req, res) => {
+router.get('/outofstock',authMiddleware, async (req: Request, res: Response) => {
    const tenantId = (req as any).tenantId; 
 
     if (!tenantId) {
@@ -19,7 +19,7 @@ router.get('/outofstock',authMiddleware, async (req, res) => {
     }
 });
 
-router.get('/totalavailable',authMiddleware, async (req, res) => {
+router.get('/totalavailable',authMiddleware, async (req: Request, res: Response) => {
    const tenantId = (req as any).tenantId; 
 
     if (!tenantId) {
@@ -32,7 +32,7 @@ router.get('/totalavailable',authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch total available products' });
     }
 });
-router.get('/topsold', authMiddleware, async (req, res) => {
+router.get('/topsold', authMiddleware, async (req: Request, res: Response) => {
    const tenantId = (req as any).tenantId; 
 
     if (!tenantId) {

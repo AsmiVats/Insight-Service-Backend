@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Response, Router , Request} from "express";
 import { rangeRevenue, totalOrdersCount, totalRevenue } from "../controller/orders";
 import authMiddleware from "../middleware";
 import { analyticsFunc } from "../shopify";
@@ -6,7 +6,7 @@ import prisma from "../db";
 
 const router = Router();
 
-router.get('/total-orders',authMiddleware, async (req, res) => {
+router.get('/total-orders',authMiddleware, async (req: Request, res: Response) => {
     const tenantId = req.tenantId;
     if(!tenantId){
         return res.status(400).json({ error: 'tenantId is required' });
@@ -15,7 +15,7 @@ router.get('/total-orders',authMiddleware, async (req, res) => {
     res.json({ totalOrders: result });
 });
 
-router.get('/revenue',authMiddleware, async (req, res) => {
+router.get('/revenue',authMiddleware, async (req: Request, res: Response) => {
     const tenantId = req.tenantId;
     if(!tenantId){
         return res.status(400).json({ error: 'tenantId is required' });
@@ -24,7 +24,7 @@ router.get('/revenue',authMiddleware, async (req, res) => {
     res.json({ totalRevenue: result });
 });
 
-router.get('/range-revenue',authMiddleware, async (req, res) => {
+router.get('/range-revenue',authMiddleware, async (req:Request, res:Response) => {
     const tenantId = req.tenantId;
     const { startDate, endDate } = req.query;
     if(!tenantId){
@@ -39,7 +39,7 @@ router.get('/range-revenue',authMiddleware, async (req, res) => {
 
 
 
-router.get('/metrics', authMiddleware, async (req, res) => {
+router.get('/metrics', authMiddleware, async (req: Request, res: Response) => {
 
     const tenantId = (req as any).tenantId; 
 
