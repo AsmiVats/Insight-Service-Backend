@@ -11,9 +11,10 @@ export const getTopCustomers = async (tenantId: string, limit = 5) => {
       firstName: true,
       lastName: true,
       email: true,
-      totalSpent: true
+      totalSpent: true,
     }
   });
+  console.log('Top Customers:', topCustomers);
     return topCustomers;
     }catch(err){
         console.error('Error fetching top customers', err);
@@ -47,5 +48,39 @@ export const revenueByCustomer = async (tenantId: string, customerEmail: string)
         return result._sum.amount || 0;
     }catch(err){
         console.error('Error calculating revenue by customer', err);
+    }
+};
+
+
+
+export const topCountries = async (tenantId: string, limit = 5) => {
+    try {
+     
+        const result = await prisma.customer.groupBy({
+            by: ['country'],
+            where: { tenantId },
+            _count: {
+                country: true
+            },
+            orderBy: {
+                _count: {
+                    country: 'desc'
+                }
+            },
+            take: limit
+        });
+        
+ 
+        const formattedResult = result.map(item => ({
+            name: item.country,           
+            count: item._count.country    
+        }));
+
+
+        return formattedResult;
+
+    } catch (err) {
+        console.error('Error fetching top countries', err);
+        throw new Error('Failed to fetch top countries data.');
     }
 };

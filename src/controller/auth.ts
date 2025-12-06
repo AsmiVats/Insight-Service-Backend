@@ -70,6 +70,7 @@ export const signinService = async (email: string, password: string) => {
         }, process.env.JWT_SECRET!);
         return { tenant, token };
     } catch (error) {
+        console.log('Signin error:', error);
         throw new Error('Signin failed');
     }
 };

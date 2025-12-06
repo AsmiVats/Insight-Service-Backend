@@ -73,3 +73,43 @@ export async function fetchOrders(shopifyDomain: string, accessToken: string) {
     console.error('Error:', error.response?.status, error.response?.data || error.message);
   }
 };
+
+// Get abandoned checkouts (Cart/Checkout Abandoned)
+
+export const analyticsFunc = async (shopifyDomain: string, accessToken: string) => {
+const abandonedCheckouts = await fetch(
+  `https://${shopifyDomain}.myshopify.com/admin/api/2024-10/checkouts.json?status=open`,
+  {
+    method: 'GET',
+    headers: {
+      'X-Shopify-Access-Token': accessToken,
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
+// Get completed orders (Purchase Completed)
+const completedOrders = await fetch(
+  `https://${shopifyDomain}.myshopify.com/admin/api/2024-10/orders.json?status=any&financial_status=paid`,
+  {
+    method: 'GET',
+    headers: {
+      'X-Shopify-Access-Token': accessToken,
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
+const checkouts = await abandonedCheckouts.json();
+const orders = await completedOrders.json();
+
+// Calculate metrics
+const analytics = {
+  cartAbandoned: checkouts.checkouts.length,
+  checkoutStarted: checkouts.checkouts.length,
+  purchaseCompleted: orders.orders.length
+};
+
+console.log(analytics);
+return analytics;
+}
