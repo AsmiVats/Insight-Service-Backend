@@ -64,6 +64,8 @@ router.post('/update',authMiddleware,async (req: Request, res: Response) => {
 			storeCustomerData(tenantId, customers),
 			storeOrderData(tenantId, orders),
 		]);
+
+		res.json({ message: 'Data updated successfully' });
 	}
 	catch(err:any){
 		return res.status(500).json({ error: err.message || 'Data update failed' });
