@@ -1,0 +1,75 @@
+const axios = require('axios');
+import 'dotenv/config';
+
+const SHOPIFY_SHOP = process.env.SHOPIFY_SHOP;
+const ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
+const API_VERSION = '2024-10'; 
+
+export async function fetchProducts(shopifyDomain: string, accessToken: string) {
+  try {
+    // const shopResponse = await axios.get(
+    //   `https://${SHOPIFY_SHOP}.myshopify.com/admin/api/${API_VERSION}/shop.json`,
+    //   {
+    //     headers: {
+    //       'X-Shopify-Access-Token': ACCESS_TOKEN,
+    //       'Content-Type': 'application/json',
+    //     },
+    //   }
+    // );
+    // console.log('Shop connection successful:', shopResponse.data.shop.name);
+    
+    const productsResponse = await axios.get(
+      `https://${shopifyDomain}.myshopify.com/admin/api/${API_VERSION}/products.json`,
+      {
+        headers: {
+          'X-Shopify-Access-Token': accessToken,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const products = productsResponse.data.products;
+    // console.log('Products:', products);
+    return products;
+  } catch (error:any) {
+    console.error('Error:', error.response?.status, error.response?.data || error.message);
+  }
+};
+
+
+export async function fetchCustomers(shopifyDomain: string, accessToken: string) {
+  try{
+    
+    const response = await axios.get(
+        // `https://${shopifyDomain}.myshopify.com/admin/api//customers.json`,
+        `https://${shopifyDomain}.myshopify.com/admin/api/${API_VERSION}/customers.json?fields=id,email,first_name,last_name,phone,created_at,orders_count,total_spent`,
+
+        {
+            headers: {
+                'X-Shopify-Access-Token': accessToken,
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+    return response.data.customers;
+  } catch (error:any) {
+    console.error('Error:', error.response?.status, error.response?.data || error.message);
+  }
+};
+
+
+export async function fetchOrders(shopifyDomain: string, accessToken: string) {
+  try{
+    const response = await axios.get( 
+        `https://${shopifyDomain}.myshopify.com/admin/api/${API_VERSION}/orders.json`,
+        {
+            headers: {
+                'X-Shopify-Access-Token': accessToken,
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+    return response.data.orders;
+  } catch (error:any) {
+    console.error('Error:', error.response?.status, error.response?.data || error.message);
+  }
+};
