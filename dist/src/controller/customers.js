@@ -68,7 +68,8 @@ const topCountries = async (tenantId, limit = 5) => {
                 _count: {
                     country: 'desc'
                 }
-            }
+            },
+            take: limit
         });
         const formattedResult = result.map(item => ({
             name: item.country,
